@@ -12,7 +12,7 @@ export default function TableComponent() {
   const [isLoading, setLoading] = useState(true)
  
   useEffect(() => {
-    fetch('http://localhost:3004/table')
+    fetch('http://localhost:3004/data')
       .then((res) => res.json())
       .then((characters) => {
         setCharacters(characters)
