@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Character } from '../types/types'
+import { Character, Nemesis, Secrete } from '../types/types'
 
 export default function TableComponent() {
 
-  const [characters, setCharacters] = useState<Character[] | null>(null);
+  const [characters, setCharacters] = useState<Character[]>();
+  const [nemesis, setNemesis] = useState<Nemesis[]>();
+  const [secrete, setSecrete] = useState<Secrete[]>();
+  const [error, setError] = useState<string>()
   const [isLoading, setLoading] = useState(true)
  
   useEffect(() => {
@@ -17,8 +20,21 @@ export default function TableComponent() {
       })
   }, [])
 
-  if (isLoading) return <p>Loading characters data...</p>
-  if (!characters) return <p>No characters data avaliable.</p>
+const handleCharacterDelete = (id: string) => {
+    setCharacters(characters?.filter((character) => character.data.ID !== id));
+}
+
+const handleNemesisDelete = (id: string) => {
+    setNemesis(nemesis?.filter((nemesis) => nemesis.data.ID !== id));
+}
+
+const handleSecreteDelete = (id: string) => {
+    setSecrete(secrete?.filter((secrete) => secrete.data.ID !== id));
+}
+
+
+  if (isLoading) return <p>Loading data...</p>
+  if (!characters) return <p>No data avaliable.</p>
  
   return (
     
@@ -35,7 +51,7 @@ export default function TableComponent() {
         <th>In space since</th>
         <th>Beer consumption</th>
         <th>Knows the answer</th>
-        <th>delete</th>
+        <th></th>
         </tr>
     </thead> 
     <tbody>
@@ -51,7 +67,8 @@ export default function TableComponent() {
             <td>{character.data.Born}</td>
             <td>{character.data['In space since']}</td>
             <td>{character.data['Beer consumption (l/y)']}</td>
-            <td>{character.data['Knows the answer?']}</td> 
+            <td>{character.data['Knows the answer?']}</td>
+            <td><button className="btn btn-xs" onClick={() => handleCharacterDelete(character.data.ID)}>Delete item</button></td> 
         </tr>
         {character.children.has_nemesis && (
         <table className="table table-xs">
@@ -72,6 +89,7 @@ export default function TableComponent() {
                 <td>{nemesis.data['Character ID']}</td>
                 <td>{nemesis.data['Is alive?']}</td>
                 <td>{nemesis.data.Years}</td>
+                <td><button className="btn btn-xs" onClick={() => handleNemesisDelete(nemesis.data.ID)}>Delete item</button></td> 
                 </tr>
                 
                 <table className="table table-xs">
@@ -89,6 +107,7 @@ export default function TableComponent() {
                         <th>{secrete.data.ID}</th>
                         <th>{secrete.data['Nemesis ID']}</th>
                         <th>{secrete.data['Secrete Code']}</th>
+                        <td><button className="btn btn-xs" onClick={() => handleSecreteDelete(secrete.data.ID)}>Delete item</button></td> 
                     </tr>
                     ))}
                 </tbody>
